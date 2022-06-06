@@ -27,144 +27,154 @@ using System.Windows.Forms;
 
 namespace Discuteitor
 {
-public partial class Form1 : Form
-{
-    private int vez = -1;
-    private int tempofinal = 0;
-    private int tempo = 0;
-    private int Inscrito = -1;
-    private bool EmFlash = false;
-
-    // private int TmpFinalMult = 10;
-    private int TmpFinalMult = 61;
-
-    private bool Ativou = false;
-
-    public Form1()
+    public partial class Form1 : Form
     {
-        InitializeComponent();
-        //this.TopMost = true;
-    }
+        private int vez = -1;
+        private int tempofinal = 0;
+        private int tempo = 0;
+        private int Inscrito = -1;
+        private bool EmFlash = false;
 
-    private void Inicializar()
-    {
-        tempo = 0;
-        tempofinal = TmpFinalMult;
-        timer.Enabled = true;
-        radioButton3.Text = "Pausa";
-        TmpFinalMult--;
-    }
+        // private int TmpFinalMult = 10;
+        private int TmpFinalMult = 61;
 
-    private void Terminou()
-    {
-        timer.Enabled = false;
-        if (Inscrito > -1)
+        private bool Ativou = false;
+
+        public Form1()
         {
-            string sSom = "";
-            if (Inscrito==0)
-            {
-                radioButton1.Text = "Falar";
-                radioButton2.Text = "Se inscrever";
-                sSom = Application.StartupPath + "\\Vez do Arnaldo.wav";
-            } else
-            {
-                radioButton1.Text = "Se inscrever";
-                radioButton2.Text = "Falar";
-                sSom = Application.StartupPath + "\\Vez da Dayse.wav";
-            }
-            SoundPlayer simpleSound = new SoundPlayer(sSom);
-            simpleSound.Play();
-            FlashWindow.Start(this);
-            EmFlash = true;
+            InitializeComponent();
+            //this.TopMost = true;
         }
-    }
 
-    private void timer_Tick(object sender, EventArgs e)
-    {
-        this.tempo++;
-        int mostrar = tempofinal - tempo;
-        string m = "";
-        if (mostrar>60)
+        private void Inicializar()
         {
-            int min = (mostrar / 60);
-            m = min.ToString()+":";
-            mostrar -= min * 60;
-        }
-        if (mostrar > -0.9)
-        {
-            m += mostrar.ToString();
-            lbTempo.Text = m;
-        } else
-            Terminou();
-    }
-
-    private void radioButton3_Click(object sender, EventArgs e)
-    {
-        if (timer.Enabled)
-            radioButton3.Text = "Continuar";
-        else
+            tempo = 0;
+            tempofinal = TmpFinalMult;
+            this.SetaTimer(true);
             radioButton3.Text = "Pausa";
-        timer.Enabled = !timer.Enabled;
-        TiraFlash();
-    }
-
-    private void radioButton1_Click(object sender, EventArgs e)
-    {
-        if (Ativou)
-        {
-            vez = 0;
-            OperBotoes(radioButton1);
-        } else
-            Ativou = true;
-    }
-
-    private void radioButton2_Click(object sender, EventArgs e)
-    {
-        vez = 1;
-        OperBotoes(radioButton2);
-    }
-
-    private void OperBotoes(RadioButton RD)
-    {
-        if (RD.Text == "Se Inscrever")
-        {
-            RD.Text = "Falar";
-            Inscrito = vez;
-            Inicializar();
+            TmpFinalMult--;
         }
-        else
+
+        private void Terminou()
         {
-            string c1 = "";
-            string c0 = "";
-            if (vez == 0)
+            this.SetaTimer(false);
+            if (Inscrito > -1)
             {
-                c0 = "Falando";
-                c1 = "Se Inscrever";
+                string sSom = "";
+                if (Inscrito == 0)
+                {
+                    radioButton1.Text = "Falar";
+                    radioButton2.Text = "Se inscrever";
+                    sSom = Application.StartupPath + "\\Vez do Arnaldo.wav";
+                }
+                else
+                {
+                    radioButton1.Text = "Se inscrever";
+                    radioButton2.Text = "Falar";
+                    sSom = Application.StartupPath + "\\Vez da Dayse.wav";
+                }
+                SoundPlayer simpleSound = new SoundPlayer(sSom);
+                simpleSound.Play();
+                FlashWindow.Start(this);
+                EmFlash = true;
+            }
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            this.tempo++;
+            int mostrar = tempofinal - tempo;
+            string m = "";
+            if (mostrar > 60)
+            {
+                int min = (mostrar / 60);
+                m = min.ToString() + ":";
+                mostrar -= min * 60;
+            }
+            if (mostrar > -0.9)
+            {
+                m += mostrar.ToString();
+                lbTempo.Text = m;
+            }
+            else
+                Terminou();
+        }
+
+        private void radioButton3_Click(object sender, EventArgs e)
+        {
+            if (timer.Enabled)
+                radioButton3.Text = "Continuar";
+            else
+                radioButton3.Text = "Pausa";
+            timer.Enabled = !timer.Enabled;
+            TiraFlash();
+        }
+
+        private void radioButton1_Click(object sender, EventArgs e)
+        {
+            if (Ativou)
+            {
+                vez = 0;
+                OperBotoes(radioButton1);
+            }
+            else
+                Ativou = true;
+        }
+
+        private void radioButton2_Click(object sender, EventArgs e)
+        {
+            vez = 1;
+            OperBotoes(radioButton2);
+        }
+
+        private void OperBotoes(RadioButton RD)
+        {
+            if (RD.Text == "Se Inscrever")
+            {
+                RD.Text = "Falar";
+                Inscrito = vez;
+                Inicializar();                
             }
             else
             {
-                c0 = "Se Inscrever";
-                c1 = "Falando";                
-                
-            }
-            radioButton1.Text = c0;
-            radioButton2.Text = c1;
-            tempo = 0;
-            lbTempo.Text = "";
-            TmpFinalMult--;
-            tempofinal = TmpFinalMult;
-            timer.Enabled = false;
-        }
-        TiraFlash();
-    }
+                string c1 = "";
+                string c0 = "";
+                if (vez == 0)
+                {
+                    c0 = "Falando";
+                    c1 = "Se Inscrever";
+                }
+                else
+                {
+                    c0 = "Se Inscrever";
+                    c1 = "Falando";
 
-    private void TiraFlash()
-    {
-        if (EmFlash)
+                }
+                radioButton1.Text = c0;
+                radioButton2.Text = c1;
+                tempo = 0;
+                lbTempo.Text = "";
+                TmpFinalMult--;
+                tempofinal = TmpFinalMult;
+                this.SetaTimer(false);
+            }
+            TiraFlash();
+        }
+
+        private void SetaTimer(bool valor)
         {
-            FlashWindow.Stop(this);
-            EmFlash = false;
+            timer.Enabled = valor; 
+            radioButton3.Enabled = valor;
+        }
+
+        private void TiraFlash()
+        {
+            if (EmFlash)
+            {
+                FlashWindow.Stop(this);
+                EmFlash = false;
+            }
         }
     }
-}
+    
 }

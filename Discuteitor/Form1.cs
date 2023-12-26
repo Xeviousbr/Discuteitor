@@ -74,7 +74,14 @@ namespace Discuteitor
                     sSom = Application.StartupPath + "\\Vez da Dayse.wav";
                 }
                 SoundPlayer simpleSound = new SoundPlayer(sSom);
-                simpleSound.Play();
+                try
+                {
+                    simpleSound.Play();
+                }
+                catch (Exception)
+                {
+                    // não faz nada
+                }                
                 FlashWindow.Start(this);
                 EmFlash = true;
             }
